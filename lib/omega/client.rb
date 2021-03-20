@@ -66,6 +66,11 @@ module Omega
       Scoreboard.new(self, data)
     end
 
+    def clarifications(name)
+      data = post('/api/contest/clarifications/', { contest_alias: name })
+      data[:clarifications]
+    end
+
     def user(user)
       data = post('/api/user/profile/', { username: user })
       User.new(self, data)

@@ -16,6 +16,10 @@ module Omega
       end
     end
 
+    def clarifications
+      @client.clarifications(data[:alias])
+    end
+
     def observe
       last = current = scoreboard
       sleep(5)

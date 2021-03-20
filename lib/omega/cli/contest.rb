@@ -28,6 +28,12 @@ module Omega
         puts omega.user(user).full_data.to_yaml
       end
 
+      def clarifications(contest_name, filter_open)
+        clarifications = omega.clarifications(contest_name)
+        clarifications.select! { |clar| clar[:answer].nil? || clar[:answer].empty? } if filter_open
+        puts clarifications.to_yaml
+      end
+
       def scoreboard(contest_name)
         score = omega.scoreboard(contest_name)
         score.simple_display.each_with_index { |s, i| puts "#{i + 1}.- #{s.values.join(': ')}" }

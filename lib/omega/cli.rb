@@ -23,14 +23,16 @@ module Omega
 OmegaUp CLI. Developed by OMIJal https://github.com/omijal/omegaup-cli.
 Tool for interacting with omegaup from CLI and available throug ruby gems.
 Commands:
- - register_users  Add a user or a bunch of users to the a contest.
+ - register-users  Add a user or a bunch of users to the a contest.
  - user            Generates a dump of the user data in yml format.
  - scoreboard      Gets contest scoreboard with users and score.
+ - clarifications  Gets contest clarifications.
 Parametes:
  --contest         Contest name
  --user            Username or email
- --user_file       A file path containing a list of user one per line without
+ --user-file       A file path containing a list of user one per line without
                    header
+ --open            Filter to only open clarifications
 Setup:
 You need to add two env variables with your omegaup credentials.
 OMEGAUP_URL  *Optional* This is intended for development purpose, it will target
@@ -57,6 +59,11 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
                   when 'scoreboard'
                     Optimist.options do
                       opt :contest, 'Contest ShortName or identifier', type: :string
+                    end
+                  when 'clarifications'
+                    Optimist.options do
+                      opt :contest, 'Contest ShortName or identifier', type: :string
+                      opt :open, 'Filter to only open clars'
                     end
                   # when 'create-contest'
                   #   Optimist.options do
@@ -96,6 +103,8 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
         user_data(@cmd_opts[:user])
       when 'scoreboard'
         scoreboard(@cmd_opts[:contest])
+      when 'clarifications'
+        clarifications(@cmd_opts[:contest], @cmd_opts[:open])
       end
     end
   end
