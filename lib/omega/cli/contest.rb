@@ -40,6 +40,14 @@ module Omega
       rescue StandardError => e
         puts "#{contest_name}: #{e.message}"
       end
+
+      def download_sources(contest_name, path)
+        Dir.mkdir(path) unless File.directory?(path)
+        contest = omega.contest(contest_name)
+        contest.all_sources.each do |source|
+          source.save_at(path)
+        end
+      end
     end
   end
 end

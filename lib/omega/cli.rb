@@ -15,6 +15,7 @@ module Omega
       scoreboard
       create-contest
       add-problem
+      sources
       help
     ].freeze
 
@@ -27,16 +28,18 @@ Commands:
  - user            Generates a dump of the user data in yml format.
  - scoreboard      Gets contest scoreboard with users and score.
  - clarifications  Gets contest clarifications.
+ - sources         Downloads all code sources into path
 Parametes:
  --contest         Contest name
  --user            Username or email
  --user-file       A file path containing a list of user one per line without
                    header
  --open            Filter to only open clarifications
+ --path            Path to store results
 Setup:
 You need to add two env variables with your omegaup credentials.
 OMEGAUP_URL  *Optional* This is intended for development purpose, it will target
-                        to https://omegau.com by default.
+                        to https://omegaup.com by default.
 OMEGAUP_USER *Required* Your OmegaUp Username or Email
 OMEGAUP_PASS *Required* Your OmegaUp Password
       )
@@ -64,6 +67,11 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
                     Optimist.options do
                       opt :contest, 'Contest ShortName or identifier', type: :string
                       opt :open, 'Filter to only open clars'
+                    end
+                  when 'sources'
+                    Optimist.options do
+                      opt :contest, 'Contest ShortName or identifier', type: :string
+                      opt :path, 'Path to store results', type: :string
                     end
                   # when 'create-contest'
                   #   Optimist.options do
@@ -105,6 +113,8 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
         scoreboard(@cmd_opts[:contest])
       when 'clarifications'
         clarifications(@cmd_opts[:contest], @cmd_opts[:open])
+      when 'sources'
+        download_sources(@cmd_opts[:contest], @cmd_opts[:path])
       end
     end
   end

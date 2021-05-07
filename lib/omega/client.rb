@@ -3,6 +3,7 @@
 require_relative 'contest'
 require_relative 'scoreboard'
 require_relative 'user'
+require_relative 'contest_run'
 
 require 'httparty'
 
@@ -26,10 +27,15 @@ module Omega
       @config = conf
     end
 
-    def perform_request(method, endpoint, data)
+    def perform_request(method, endpoint, data, retried = false)
       url = "#{@config['endpoint']}#{endpoint}"
       response = self.class.send(method, url, body: data)
       body = JSON.parse(response.body, symbolize_names: true)
+
+      if body[:errorcode] == 401 && !retried
+        login
+        return perform_request(method, endpoint, data, true)
+      end
       raise OmegaError, body if body[:error]
 
       body
@@ -71,6 +77,10 @@ module Omega
       data[:clarifications]
     end
 
+    def respond_clarif(id, response)
+      post('/api/clarification/update/', { clarification_id: id, answer: response })
+    end
+
     def user(user)
       data = post('/api/user/profile/', { username: user })
       User.new(self, data)
@@ -82,6 +92,15 @@ module Omega
 
     def problems_solved(user)
       post('/api/user/problemsSolved/', { username: user })
+    end
+
+    def run_details(run)
+      post('/api/run/details/', { run_alias: run })
+    end
+
+    def contest_runs(contest, offset, page_size)
+      data = post('/api/contest/runs/', { contest_alias: contest, offset: offset, rowcount: page_size })
+      data[:runs].map { |run| ContestRun.new(self, run) }
     end
   end
 end
