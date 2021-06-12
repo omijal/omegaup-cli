@@ -24,6 +24,16 @@ module Omega
         puts "Failed users: \n- #{failed.join("\n- ")}"
       end
 
+      def copy_users(contest, from)
+        target = omega.contest(contest)
+        source = omega.contest(from)
+        source.users.each do |user|
+          target.add_user(user)
+        rescue StandardError => e
+          puts "Error adding #{user}: #{e.message}"
+        end
+      end
+
       def user_data(user)
         puts omega.user(user).full_data.to_yaml
       end

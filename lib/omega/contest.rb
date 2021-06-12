@@ -39,6 +39,10 @@ module Omega
       @client.clarifications(data[:alias])
     end
 
+    def users
+      scoreboard.users
+    end
+
     def observe(score_notifier, clar_noritifer)
       last = current = scoreboard
       sleep(5)
@@ -47,8 +51,8 @@ module Omega
           clarifications.select { |clar| clar[:answer].nil? || clar[:answer].empty? }
                         .each { |clar| clar_noritifer.call(clar) }
           sleep(300)
-        rescue StandardError => ex
-          puts ex.message
+        rescue StandardError => e
+          puts e.message
           sleep(3000)
         end
       end
@@ -62,14 +66,17 @@ module Omega
             current_problem = current_score.score_for(name)
             last_points = problem[:points]
             current_points = current_problem[:points]
-            score_notifier.call(data[:alias], score.username, name, current_points, last_points, data[:alias]) if current_points != last_points
+            if current_points != last_points
+              score_notifier.call(data[:alias], score.username, name, current_points, last_points,
+                                  data[:alias])
+            end
           end
         end
         # puts '-' * 60
         last = current
         sleep(15)
-      rescue StandardError => ex
-        puts ex.message
+      rescue StandardError => e
+        puts e.message
         sleep(3000)
       end
     end

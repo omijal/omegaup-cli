@@ -53,6 +53,7 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
                     Optimist.options do
                       opt :contest, 'Contest ShortName or identifier', type: :string
                       opt :user, 'Username or email', type: :string
+                      opt :from, 'Another constest that allows to clone users from another contest', type: :string
                       opt :user_file, 'A file containing the users list one per line and without header', type: :string
                     end
                   when 'user'
@@ -107,6 +108,7 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
       when 'register-users'
         register_user(@cmd_opts[:contest], @cmd_opts[:user]) if @cmd_opts[:user]
         register_users(@cmd_opts[:contest], @cmd_opts[:user_file]) if @cmd_opts[:user_file]
+        copy_users(@cmd_opts[:contest], @cmd_opts[:from]) if @cmd_opts[:from]
       when 'user'
         user_data(@cmd_opts[:user])
       when 'scoreboard'
