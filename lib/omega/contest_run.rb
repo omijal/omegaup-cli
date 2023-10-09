@@ -13,7 +13,7 @@ module Omega
     end
 
     def save_at(path)
-      File.write("#{path}/#{@data[:guid]}.yaml", { details: details, data: @data }.to_yaml)
+      File.write("#{path}/#{@data[:guid]}.yaml", { details:, data: @data }.to_yaml)
     end
   end
 end

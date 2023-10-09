@@ -9,9 +9,8 @@ module Omega
 
     def initialize(client, entry)
       @username = entry[:username]
-      @client = client
       @problems = entry[:problems] || []
-      @data = entry
+      super(client, entry)
     end
 
     def merge(score)

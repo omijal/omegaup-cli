@@ -9,6 +9,10 @@ module Omega
       @client.scoreboard(data[:alias])
     end
 
+    def problems
+      @data[:problems]
+    end
+
     def runs(offset = 0, page_size = 100)
       @client.contest_runs(data[:alias], offset, page_size)
     end
@@ -41,6 +45,14 @@ module Omega
 
     def users
       scoreboard.users
+    end
+
+    def add_problem(name)
+      @client.add_problem_to_contest(data[:alias], name)
+    end
+
+    def add_admin_group(group)
+      @client.add_admin_group(data[:alias], group)
     end
 
     def observe(score_notifier, clar_noritifer)

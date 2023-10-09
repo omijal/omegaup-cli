@@ -51,6 +51,23 @@ module Omega
         puts "#{contest_name}: #{e.message}"
       end
 
+      def add_problem(contest_name, problem_name)
+        contest = omega.contest(contest_name)
+        contest.add_problem(problem_name)
+      rescue StandardError => e
+        puts "Error adding #{problem_name}: #{e.message}"
+      end
+
+      def copy_problems(contest_name, from)
+        contest = omega.contest(contest_name)
+        source = omega.contest(from)
+        source.problems.each do |problem|
+          contest.add_problem(problem[:alias])
+        rescue StandardError => e
+          puts "Error adding #{problem[:alias]}: #{e.message}"
+        end
+      end
+
       def download_sources(contest_name, path)
         Dir.mkdir(path) unless File.directory?(path)
         contest = omega.contest(contest_name)

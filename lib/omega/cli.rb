@@ -19,36 +19,49 @@ module Omega
       help
     ].freeze
 
-    def print_help
-      puts %(
+    GENERAL_DOC = %(
 OmegaUp CLI. Developed by OMIJal https://github.com/omijal/omegaup-cli.
 Tool for interacting with omegaup from CLI and available throug ruby gems.
 Commands:
- - register-users  Add a user or a bunch of users to the a contest.
- - user            Generates a dump of the user data in yml format.
- - scoreboard      Gets contest scoreboard with users and score.
- - clarifications  Gets contest clarifications.
- - sources         Downloads all code sources into path
+- register-users  Add a user or a bunch of users to the a contest.
+- copy-problems   Adds prob from another contest
+- user            Generates a dump of the user data in yml format.
+- scoreboard      Gets contest scoreboard with users and score.
+- clarifications  Gets contest clarifications.
+- sources         Downloads all code sources into path
 Parametes:
- --contest         Contest name
- --user            Username or email
- --user-file       A file path containing a list of user one per line without
-                   header
- --open            Filter to only open clarifications
- --path            Path to store results
+--contest         Contest name
+--user            Username or email
+--user-file       A file path containing a list of user one per line without
+                 header
+--open            Filter to only open clarifications
+--path            Path to store results
 Setup:
 You need to add two env variables with your omegaup credentials.
 OMEGAUP_URL  *Optional* This is intended for development purpose, it will target
-                        to https://omegaup.com by default.
+                      to https://omegaup.com by default.
 OMEGAUP_USER *Required* Your OmegaUp Username or Email
 OMEGAUP_PASS *Required* Your OmegaUp Password
-      )
+    )
+
+    def print_help
+      puts GENERAL_DOC
     end
 
     def initialize(_)
       @cmd = ARGV.shift
 
       @cmd_opts = case @cmd
+                  when 'copy-problems'
+                    Optimist.options do
+                      opt :contest, 'Contest ShortName or identifier', type: :string
+                      opt :from, 'Another constest that allows to clone users from another contest', type: :string
+                    end
+                  when 'add-problem'
+                    Optimist.options do
+                      opt :contest, 'Contest ShortName or identifier', type: :string
+                      opt :problem, 'Problem name', type: :string
+                    end
                   when 'register-users'
                     Optimist.options do
                       opt :contest, 'Contest ShortName or identifier', type: :string
@@ -93,8 +106,8 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
       config = {
         'omega' => {
           'endpoint' => ENV['OMEGAUP_URL'] || 'https://omegaup.com',
-          'user' => ENV['OMEGAUP_USER'],
-          'pass' => ENV['OMEGAUP_PASS']
+          'user' => ENV.fetch('OMEGAUP_USER', nil),
+          'pass' => ENV.fetch('OMEGAUP_PASS', nil)
         }
       }
 
@@ -117,6 +130,10 @@ OMEGAUP_PASS *Required* Your OmegaUp Password
         clarifications(@cmd_opts[:contest], @cmd_opts[:open])
       when 'sources'
         download_sources(@cmd_opts[:contest], @cmd_opts[:path])
+      when 'copy-problems'
+        copy_problems(@cmd_opts[:contest], @cmd_opts[:from])
+      when 'add-problem'
+        add_problem(@cmd_opts[:contest], @cmd_opts[:problem])
       end
     end
   end

@@ -7,7 +7,7 @@ module Omega
     def full_data
       {
         data: @data,
-        problems_solved: problems_solved,
+        problems_solved:,
         resume: report
       }
     end

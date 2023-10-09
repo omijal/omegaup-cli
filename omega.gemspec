@@ -25,6 +25,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'amazing_print'
   spec.add_development_dependency 'httparty'
   spec.add_development_dependency 'minitest', '~> 5'
+  spec.add_development_dependency 'mocha'
   spec.add_development_dependency 'optimist'
+  spec.add_development_dependency 'rack-minitest'
   spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'webmock'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end
