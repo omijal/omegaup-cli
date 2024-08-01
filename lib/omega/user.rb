@@ -16,6 +16,10 @@ module Omega
       @client.problems_solved(data[:username])[:problems]
     end
 
+    def username
+      @data[:username]
+    end
+
     def report
       data = { score: 0, count: 0 }
       problems_solved.each do |p|

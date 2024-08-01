@@ -10,7 +10,7 @@ module Omega
     def initialize(client, entry)
       @username = entry[:username]
       @problems = entry[:problems] || []
-      super(client, entry)
+      super
     end
 
     def merge(score)
@@ -37,6 +37,10 @@ module Omega
       end
       nil
     end
+
+    def to_h
+      @data[:problems]
+    end
   end
 
   class Scoreboard < Base
@@ -47,6 +51,10 @@ module Omega
       data[:ranking].each do |entry|
         @data[:ranking][entry[:username]] = ScoreboardEntry.new(client, entry)
       end
+    end
+
+    def to_h
+      @data[:ranking].map { |username, entry| { username:, score: entry.to_h } }
     end
 
     def merge(board)

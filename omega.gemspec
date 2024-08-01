@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'omegaup'
   spec.version       = Omega::VERSION
   spec.authors       = ['Gilberto Vargas']
-  spec.email         = ['tachoguitar@gmail.com']
+  spec.email         = ['tachomexgems@gmail.com']
 
   spec.summary       = 'File created for encrypting files using ssh keys'
   spec.description   = 'Allows to encrypt files using ssh keys'

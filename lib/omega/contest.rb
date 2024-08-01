@@ -31,6 +31,14 @@ module Omega
       sources
     end
 
+    def full_details
+      @full_details ||= @client.scrap_get("/contest/#{data[:alias]}/edit/")
+    end
+
+    def group_admin?(group_name)
+      full_details[:group_admins].any? { |group| group[:alias].casecmp(group_name).zero? }
+    end
+
     def add_user(user)
       if user.is_a?(String)
         @client.add_user_to_contest(user, data[:alias])
@@ -45,6 +53,10 @@ module Omega
 
     def users
       scoreboard.users
+    end
+
+    def alias
+      @data[:alias].downcase
     end
 
     def add_problem(name)
